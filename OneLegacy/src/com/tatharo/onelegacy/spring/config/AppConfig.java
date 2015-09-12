@@ -20,4 +20,12 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 	    configurer.enable();
 	  }
+//	@Bean
+//	public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
+//	final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+//    final ObjectMapper objectMapper = new ObjectMapper();
+//    converter.setObjectMapper(objectMapper);
+//    super.add;
+//	}
+
 }
