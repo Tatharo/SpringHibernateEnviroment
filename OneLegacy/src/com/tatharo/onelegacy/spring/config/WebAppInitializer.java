@@ -13,7 +13,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
 		
 		
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-        ctx.register(AppConfig.class);
+        ctx.register(AppConfig.class, RepositoryConfig.class);
         ctx.setServletContext(servletContext);
         DispatcherServlet dispatcherServlet =new DispatcherServlet(ctx);
         dispatcherServlet.setDetectAllHandlerMappings(true);

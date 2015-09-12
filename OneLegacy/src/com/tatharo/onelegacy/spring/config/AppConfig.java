@@ -7,8 +7,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+
 @Configuration
-@ComponentScan("com.tatharo.onelegacy.spring")
+@ComponentScan("com.tatharo.onelegacy")
 @EnableWebMvc
 public class AppConfig extends WebMvcConfigurerAdapter{
 	@Override
@@ -19,6 +20,4 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 	    configurer.enable();
 	  }
-	
-	
 }
