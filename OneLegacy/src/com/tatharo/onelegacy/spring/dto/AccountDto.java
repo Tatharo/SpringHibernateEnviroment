@@ -36,5 +36,4 @@ public final class AccountDto {
 	public String getPassWord() {
 		return passWord;
 	}
-
 }

@@ -20,12 +20,28 @@ public class UserAccountRepository {
 	}
 	
 	@Transactional
-	public boolean isEmailAvailable(String object) {
+	public boolean isEmailAvailable(String email) {
 		String hql = "FROM UserAccount WHERE email=:email";
         Query query = sf.getCurrentSession().createQuery(hql);
-        query.setString("email", object);
+        query.setString("email", email);
+        @SuppressWarnings("unchecked")
         List<UserAccount> tempList = (List<UserAccount>) query.list();
-		return (tempList.get(0) == null);
+        if(tempList.size() == 0)
+        	return false;
+		return true;
+	}
+	
+	@Transactional
+	public boolean isUserNameAvailable(String userName){
+		String hql = "FROM UserAccount WHERE userName=:userName";
+        Query query = sf.getCurrentSession().createQuery(hql);
+        query.setString("userName", userName);
+        @SuppressWarnings("unchecked")
+		List<UserAccount> tempList = (List<UserAccount>) query.list();
+        if(tempList.size() == 0)
+        	return false;
+		return true;
+		
 	}
 	
 }

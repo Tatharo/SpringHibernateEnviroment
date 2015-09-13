@@ -27,12 +27,6 @@ public class RepositoryConfig {
 	private String username = "root";
 	private String password = "";
 
-	// private String hibernateDialect;
-	//
-	// private String hibernateShowSql;
-	//
-	// private String hibernateHbm2ddlAuto;
-
 	private DataSource getDataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);

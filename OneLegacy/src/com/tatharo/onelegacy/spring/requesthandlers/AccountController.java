@@ -1,8 +1,11 @@
 package com.tatharo.onelegacy.spring.requesthandlers;
 
+import javax.validation.Valid;
+
 import org.apache.commons.validator.routines.EmailValidator;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,35 +25,47 @@ public class AccountController {
 	private UserAccountRepository userAccountRepository;
 
 	@RequestMapping(value = "account/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView createAccount(@RequestBody AccountDto accountDto) {
+	public ModelAndView createAccount(@Valid @RequestBody AccountDto accountDto) {
+		boolean startTransaction = true;
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
 		if (EmailValidator.getInstance().isValid(accountDto.getEmail())) {
-			try{
-			UserAccount userAccount = new UserAccount(accountDto.getUserName(), accountDto.getPassWord(),
-					accountDto.getEmail());
-			if(!userAccountRepository.isEmailAvailable(accountDto.getEmail())){
-				modelAndView.addObject("Email is already taken");
-				return modelAndView;
-			};
-			userAccountRepository.saveUserAccount(userAccount);
-			modelAndView.addObject("Account Created");
-			}catch(ConstraintViolationException e){
-				modelAndView.addObject("Failed Transaction: " + e.getCause().getMessage());
+			try {
+				UserAccount userAccount = new UserAccount(accountDto.getUserName(), accountDto.getPassWord(),
+						accountDto.getEmail());
+				if (userAccountRepository.isEmailAvailable(accountDto.getEmail())) {
+					modelAndView.addObject("EmailCheck", "Email is already taken");
+					startTransaction = false;
+				}
+				if (userAccountRepository.isUserNameAvailable(accountDto.getUserName())) {
+					modelAndView.addObject("UserNameCheck", "UserName is already taken");
+					startTransaction = false;
+				}
+				if (startTransaction) {
+					userAccountRepository.saveUserAccount(userAccount);
+					modelAndView.addObject("UserAccount", "Account Created");
+				}
+			} catch (ConstraintViolationException e) {
+				modelAndView.addObject("Exception" + "Failed Transaction: " + e.getCause().getMessage());
 				return modelAndView;
 			}
-		}else{
-			modelAndView.addObject("Invalid Email");
+		} else {
+			modelAndView.addObject("EmailCheck", "Invalid Email");
 		}
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "account/myaccount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView getAccount() {
+		//TODO JWT token Authentication, Requires Login
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("test", "test");
+		
 		AccountDto accountDto = new AccountDto("string", "string", "string");
-		ModelAndView modelAndView = new ModelAndView(/*"request", "res", accountDto*/);
+		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
 		modelAndView.addObject("myaccountdet", accountDto);
+		modelAndView.addObject(headers);
 		return modelAndView;
 
 	}
