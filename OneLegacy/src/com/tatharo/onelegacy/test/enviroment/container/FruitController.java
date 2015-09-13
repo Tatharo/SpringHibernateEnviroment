@@ -1,4 +1,4 @@
-package com.tatharo.onelegacy.spring.requesthandlers;
+package com.tatharo.onelegacy.test.enviroment.container;
 
 import java.util.List;
 
@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tatharo.onelegacy.hibernate.domain.model.Product;
 import com.tatharo.onelegacy.hibernate.domain.repository.HibernateTransactions;
-import com.tatharo.onelegacy.spring.dto.AppleTime;
-import com.tatharo.onelegacy.spring.dto.PeachTime;
 import com.tatharo.onelegacy.spring.dto.baseclasses.ProductBase;
-import com.tatharo.onelegacy.test.enviroment.container.TestClass;
 
 @RestController
 public class FruitController {

@@ -13,7 +13,9 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.tatharo.onelegacy.hibernate.domain.model.Person;
 import com.tatharo.onelegacy.hibernate.domain.model.Product;
+import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 
 @Configuration
 @EnableTransactionManagement
@@ -42,7 +44,7 @@ public class RepositoryConfig {
 
 	private Properties getHibernateProperties() {
 		Properties properties = new Properties();
-		properties.put("hibernate.hbm2ddl.auto", "create");
+		properties.put("hibernate.hbm2ddl.auto", "update");
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 		return properties;
@@ -54,7 +56,7 @@ public class RepositoryConfig {
 
 		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(this.getDataSource());
 		sessionBuilder.addProperties(this.getHibernateProperties());
-		sessionBuilder.addPackage("com.tatharo.onelegacy.hibernate.domain.model").addAnnotatedClass(Product.class);
+		sessionBuilder.addPackage("com.tatharo.onelegacy.hibernate.domain.model").addAnnotatedClass(Product.class).addAnnotatedClass(UserAccount.class).addAnnotatedClass(Person.class);
 		return sessionBuilder.buildSessionFactory();
 	}
 

@@ -1,4 +1,4 @@
-package com.tatharo.onelegacy.spring.dto;
+package com.tatharo.onelegacy.test.enviroment.container;
 
 import com.tatharo.onelegacy.spring.dto.baseclasses.ProductBase;
 
