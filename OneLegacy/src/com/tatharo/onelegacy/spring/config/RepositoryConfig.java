@@ -1,5 +1,6 @@
 package com.tatharo.onelegacy.spring.config;
 
+
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.tatharo.onelegacy.hibernate.domain.model.Person;
 import com.tatharo.onelegacy.hibernate.domain.model.Product;
 import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
+
 
 @Configuration
 @EnableTransactionManagement
@@ -37,25 +39,34 @@ public class RepositoryConfig {
 	}
 
 	private Properties getHibernateProperties() {
+
 		Properties properties = new Properties();
 		properties.put("hibernate.hbm2ddl.auto", "update");
-		properties.put("hibernate.show_sql", "true");
-		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+		properties.put("hibernate.show_sql", true);
+		properties.put("hibernate.dialect",
+				"org.hibernate.dialect.MySQLDialect");
 		return properties;
+
 	}
 
 	@Bean
 	@Autowired
 	public SessionFactory getSessionFactory() {
 
-		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(this.getDataSource());
+		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(
+				this.getDataSource());
 		sessionBuilder.addProperties(this.getHibernateProperties());
-		sessionBuilder.addPackage("com.tatharo.onelegacy.hibernate.domain.model").addAnnotatedClass(Product.class).addAnnotatedClass(UserAccount.class).addAnnotatedClass(Person.class);
+		sessionBuilder
+				.addPackage("com.tatharo.onelegacy.hibernate.domain.model")
+				.addAnnotatedClass(Product.class)
+				.addAnnotatedClass(UserAccount.class)
+				.addAnnotatedClass(Person.class);
 		return sessionBuilder.buildSessionFactory();
 	}
 
 	@Bean
-	public HibernateTransactionManager hibernateTransactionManager(SessionFactory sessionFactory) {
+	public HibernateTransactionManager hibernateTransactionManager(
+			SessionFactory sessionFactory) {
 		return new HibernateTransactionManager(sessionFactory);
 	}
 }
