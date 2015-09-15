@@ -5,11 +5,11 @@ import javax.validation.Valid;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 import com.tatharo.onelegacy.hibernate.domain.repository.UserAccountRepository;
 import com.tatharo.onelegacy.spring.dto.AccountDto;
+import com.tatharo.onelegacy.spring.dto.PassWordDto;
 
 @RestController
 public class AccountController {
@@ -24,7 +25,7 @@ public class AccountController {
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 
-	@RequestMapping(value = "account/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "account/subscribe", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView createAccount(@Valid @RequestBody AccountDto accountDto) {
 		boolean startTransaction = true;
 		ModelAndView modelAndView = new ModelAndView();
@@ -56,17 +57,35 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "account/myaccount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
 	public ModelAndView getAccount() {
-		//TODO JWT token Authentication, Requires Login
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("test", "test");
-		
-		AccountDto accountDto = new AccountDto("string", "string", "string");
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
-		modelAndView.addObject("myaccountdet", accountDto);
-		modelAndView.addObject(headers);
+
+		// TODO JWT token Authentication, Requires Login, get userName
+		// fromJWT??? or full object
+		UserAccount userAccount = userAccountRepository.getByUserName("ssstring22");
+		if (userAccount != null) {
+			// TODO Password should not be returned right? ^^, mayebe change
+			// AccountDto or keep email and username in JWT token
+			AccountDto accountDto = new AccountDto(userAccount.getEmail(), userAccount.getUserName(),
+					userAccount.getPassword());
+			modelAndView.addObject("myUserAccount", accountDto);
+		} else {
+			modelAndView.addObject("User Error", "User not found, logged out?");
+		}
 		return modelAndView;
 
+	}
+	
+	@RequestMapping(value = "account/myaccount", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ModelAndView changePassword(@RequestBody PassWordDto passWordDto){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setView(new MappingJackson2JsonView());
+		//TODO save implementation of change password, need to be logged in JWT authentication
+		
+		
+		return modelAndView;
 	}
 }

@@ -41,7 +41,17 @@ public class UserAccountRepository {
         if(tempList.size() == 0)
         	return false;
 		return true;
-		
 	}
 	
+	@Transactional
+	public UserAccount getByUserName(String userName){
+		String hql = "FROM UserAccount WHERE userName=:userName";
+        Query query = sf.getCurrentSession().createQuery(hql);
+        query.setString("userName", userName);
+        @SuppressWarnings("unchecked")
+		List<UserAccount> tempList = (List<UserAccount>) query.list();
+        if(tempList.size() == 0)
+        	return null;
+		return tempList.get(0);
+	}
 }
