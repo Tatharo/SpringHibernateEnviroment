@@ -32,14 +32,19 @@ public class AccountController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		if (EmailValidator.getInstance().isValid(accountDto.getEmail())) {
 			try {
-				UserAccount userAccount = new UserAccount(accountDto.getUserName(), accountDto.getPassWord(),
+				UserAccount userAccount = new UserAccount(
+						accountDto.getUserName(), accountDto.getPassWord(),
 						accountDto.getEmail());
-				if (userAccountRepository.isEmailAvailable(accountDto.getEmail())) {
-					modelAndView.addObject("EmailCheck", "Email is already taken");
+				if (userAccountRepository.isEmailAvailable(accountDto
+						.getEmail())) {
+					modelAndView.addObject("EmailCheck",
+							"Email is already taken");
 					startTransaction = false;
 				}
-				if (userAccountRepository.isUserNameAvailable(accountDto.getUserName())) {
-					modelAndView.addObject("UserNameCheck", "UserName is already taken");
+				if (userAccountRepository.isUserNameAvailable(accountDto
+						.getUserName())) {
+					modelAndView.addObject("UserNameCheck",
+							"UserName is already taken");
 					startTransaction = false;
 				}
 				if (startTransaction) {
@@ -47,7 +52,8 @@ public class AccountController {
 					modelAndView.addObject("UserAccount", "Account Created");
 				}
 			} catch (ConstraintViolationException e) {
-				modelAndView.addObject("Exception" + "Failed Transaction: " + e.getCause().getMessage());
+				modelAndView.addObject("Exception" + "Failed Transaction: "
+						+ e.getCause().getMessage());
 				return modelAndView;
 			}
 		} else {
@@ -64,12 +70,13 @@ public class AccountController {
 
 		// TODO JWT token Authentication, Requires Login, get userName
 		// fromJWT??? or full object
-		UserAccount userAccount = userAccountRepository.getByUserName("ssstring22");
+		UserAccount userAccount = userAccountRepository
+				.getByUserName("ssstring22");
 		if (userAccount != null) {
 			// TODO Password should not be returned right? ^^, mayebe change
 			// AccountDto or keep email and username in JWT token
-			AccountDto accountDto = new AccountDto(userAccount.getEmail(), userAccount.getUserName(),
-					userAccount.getPassword());
+			AccountDto accountDto = new AccountDto(userAccount.getEmail(),
+					userAccount.getUserName(), userAccount.getPassword());
 			modelAndView.addObject("myUserAccount", accountDto);
 		} else {
 			modelAndView.addObject("User Error", "User not found, logged out?");
@@ -77,15 +84,36 @@ public class AccountController {
 		return modelAndView;
 
 	}
-	
-	@RequestMapping(value = "account/myaccount", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "account/mypassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ModelAndView changePassword(@RequestBody PassWordDto passWordDto){
+	public ModelAndView changePassword(@RequestBody PassWordDto passWordDto) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
-		//TODO save implementation of change password, need to be logged in JWT authentication
-		
-		
+		// TODO save implementation of change password, need to be logged in JWT
+		// authentication
+		UserAccount userAccount = userAccountRepository
+				.getByUserName("ssstring22");
+		if (userAccount.getPassword().equals(passWordDto.getOldPassWord())) {
+			if (passWordDto.getNewPassWordOne().equals(
+					passWordDto.getNewPassWordTwo())) {
+				if (!userAccount.getPassword().equalsIgnoreCase(
+						passWordDto.getNewPassWordOne())) {
+					userAccount.setPassword(passWordDto.getNewPassWordOne());
+					userAccountRepository.updateUserAccount(userAccount);
+					modelAndView.addObject("PassWordSucces","PassWord Succesfully Changed");
+				} else {
+					modelAndView.addObject("PassWordError",
+							"New PassWord is too similar to Old PassWord");
+				}
+			} else {
+				modelAndView.addObject("PassWordError",
+						"New PassWord Inputs Don't Match");
+			}
+		} else {
+			modelAndView.addObject("PassWordError",
+					"Current PassWord does not match DB");
+		}
 		return modelAndView;
 	}
 }

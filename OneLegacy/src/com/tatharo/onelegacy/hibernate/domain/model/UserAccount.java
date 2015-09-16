@@ -22,25 +22,23 @@ public final class UserAccount {
     @Column(unique=true)
 	private String email;
     
-	public UserAccount() {
-		super();
-	}
-
 	public UserAccount(String userName, String password, String email) {
 		this.userName = userName;
 		this.password = password;
 		this.email = email;
 	}
 
-//	public Person getPerson() {
-//		return person;
-//	}
 	public String getUserName() {
 		return userName;
 	}
 	public String getPassword() {
 		return password;
 	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public String getEmail() {
 		return email;
 	}
