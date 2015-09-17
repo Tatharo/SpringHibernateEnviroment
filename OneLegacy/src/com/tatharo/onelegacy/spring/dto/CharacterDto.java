@@ -18,7 +18,6 @@ public class CharacterDto {
 	@NotNull
 	private final byte characterLevel;
 	//TODO: How to Assign
-	private final GuildRank guildRank;
 
 	@JsonCreator
 	public CharacterDto(
@@ -27,15 +26,14 @@ public class CharacterDto {
 			@JsonProperty("characterRace") String characterRace,
 			@JsonProperty("characterMainSpecialization") String characterMainSpecialization,
 			@JsonProperty("characterOffSpecialization") String characterOffSpecialization,
-			@JsonProperty("characterLevel") byte characterLevel,
-			@JsonProperty("guildRank") GuildRank guildRank) {
+			@JsonProperty("characterLevel") byte characterLevel){
 		this.characterName = characterName;
 		this.characterClass = characterClass;
 		this.characterRace = characterRace;
 		this.characterMainSpecialization = characterMainSpecialization;
 		this.characterOffSpecialization = characterOffSpecialization;
 		this.characterLevel = characterLevel;
-		this.guildRank = guildRank;
+
 
 	}
 
@@ -63,7 +61,4 @@ public class CharacterDto {
 		return characterLevel;
 	}
 
-	public GuildRank getGuildRank() {
-		return guildRank;
-	}
 }
