@@ -1,11 +1,14 @@
 package com.tatharo.onelegacy.hibernate.domain.model;
 
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public final class UserAccount {
@@ -14,7 +17,8 @@ public final class UserAccount {
     @Basic(optional = false)
     @Column(name = "ID", unique=true)
 	private long id;
-//	private Person person;
+	@OneToMany
+	private List<Character> characters;
     @Column(unique=true)
 	private String userName;
 	//TODO Password Encryption
