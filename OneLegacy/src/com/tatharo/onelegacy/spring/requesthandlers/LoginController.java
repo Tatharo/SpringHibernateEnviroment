@@ -12,36 +12,40 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 import com.tatharo.onelegacy.hibernate.domain.repository.UserAccountRepository;
 import com.tatharo.onelegacy.spring.dto.LoginDto;
+import com.tatharo.onelegacy.web.jwt.authorization.ActiveJWTContainer;
+import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 
 @RestController
 public class LoginController {
 	private UserAccountRepository userAccountRepository;
+	private ActiveJWTContainer activeJWTContainer;
 
 	@Autowired
-	public LoginController(UserAccountRepository userAccountRepository) {
+	public LoginController(UserAccountRepository userAccountRepository, ActiveJWTContainer activeJWTContainer) {
 		this.userAccountRepository = userAccountRepository;
+		this.activeJWTContainer = activeJWTContainer;
 	}
 
 	@RequestMapping(value = "account/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public HttpHeaders startLogin(@RequestBody LoginDto loginDto) {
-		// TODO: Maybe create service layer so repositories are not in the
-		// actual REST calls
 		HttpHeaders httpHeaders = new HttpHeaders();
-		UserAccount userAccount = userAccountRepository.getByUserName(loginDto
-		.getUserName());
-		/*
-		 * should be encrypted at some point
-		 */
-		if (userAccount.getPassword().equals(loginDto.getPassWord())) {
-			//add JWT creation method
-			httpHeaders.add("Authorization", "JWT Token");
-		} else {
-			//Maybe no header returned and/or server side check for multiple failed login attempts
-			httpHeaders.add("Authorization", "failed");
+		UserAccount userAccount;
+		long authKey;
+		if (userAccountRepository.isUserNameAvailable(loginDto.getUserName())) {
+			userAccount = userAccountRepository.getByUserName(loginDto.getUserName());
+
+			if (userAccount.getPassword().equals(loginDto.getPassWord())) {
+				authKey = activeJWTContainer.addJWTSessionObject(loginDto.getUserName());
+				httpHeaders.add("Authorization", JsonWebTokenCreator.createJWT(authKey, loginDto.getUserName()));
+			} else {
+				// TODO:Maybe no header returned and/or server side check for
+				// multiple failed login attempts
+				httpHeaders.add("Authorization", "failed");
+			}
 		}
-		// TODO: should return authorization header with JWT token
 		return httpHeaders;
+
 	}
-	
+
 }

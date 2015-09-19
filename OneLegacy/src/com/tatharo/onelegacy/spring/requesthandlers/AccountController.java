@@ -1,5 +1,6 @@
 package com.tatharo.onelegacy.spring.requesthandlers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -18,12 +19,21 @@ import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 import com.tatharo.onelegacy.hibernate.domain.repository.UserAccountRepository;
 import com.tatharo.onelegacy.spring.dto.AccountDto;
 import com.tatharo.onelegacy.spring.dto.PassWordDto;
+import com.tatharo.onelegacy.web.jwt.authorization.ActiveJWTContainer;
+import com.tatharo.onelegacy.web.jwt.authorization.CarrierJWTDataObject;
+import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 
 @RestController
 public class AccountController {
 
 	@Autowired
+	public AccountController(ActiveJWTContainer activeJWTContainer, UserAccountRepository userAccountRepository) {
+		this.userAccountRepository = userAccountRepository;
+		this.activeJWTContainer = activeJWTContainer;
+	}
+
 	private UserAccountRepository userAccountRepository;
+	private ActiveJWTContainer activeJWTContainer;
 
 	@RequestMapping(value = "account/subscribe", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView createAccount(@Valid @RequestBody AccountDto accountDto) {
@@ -32,19 +42,14 @@ public class AccountController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		if (EmailValidator.getInstance().isValid(accountDto.getEmail())) {
 			try {
-				UserAccount userAccount = new UserAccount(
-						accountDto.getUserName(), accountDto.getPassWord(),
+				UserAccount userAccount = new UserAccount(accountDto.getUserName(), accountDto.getPassWord(),
 						accountDto.getEmail());
-				if (userAccountRepository.isEmailAvailable(accountDto
-						.getEmail())) {
-					modelAndView.addObject("EmailCheck",
-							"Email is already taken");
+				if (userAccountRepository.isEmailAvailable(accountDto.getEmail())) {
+					modelAndView.addObject("EmailCheck", "Email is already taken");
 					startTransaction = false;
 				}
-				if (userAccountRepository.isUserNameAvailable(accountDto
-						.getUserName())) {
-					modelAndView.addObject("UserNameCheck",
-							"UserName is already taken");
+				if (userAccountRepository.isUserNameAvailable(accountDto.getUserName())) {
+					modelAndView.addObject("UserNameCheck", "UserName is already taken");
 					startTransaction = false;
 				}
 				if (startTransaction) {
@@ -52,8 +57,7 @@ public class AccountController {
 					modelAndView.addObject("UserAccount", "Account Created");
 				}
 			} catch (ConstraintViolationException e) {
-				modelAndView.addObject("Exception" + "Failed Transaction: "
-						+ e.getCause().getMessage());
+				modelAndView.addObject("Exception" + "Failed Transaction: " + e.getCause().getMessage());
 				return modelAndView;
 			}
 		} else {
@@ -62,27 +66,27 @@ public class AccountController {
 		return modelAndView;
 	}
 
+	// JWT testing
 	@RequestMapping(value = "account/myaccount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ModelAndView getAccount() {
+	public ModelAndView getAccount(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
+		System.out.println(request.getHeader("Authorization"));
+		CarrierJWTDataObject carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+		System.out.println(carrierJWTDataObject.getAuthKey());
 
-		// TODO JWT token Authentication, Requires Login, get userName
-		// fromJWT??? or full object
-		UserAccount userAccount = userAccountRepository
-				.getByUserName("ssstring22");
-		if (userAccount != null) {
-			// TODO Password should not be returned right? ^^, mayebe change
-			// AccountDto or keep email and username in JWT token
-			AccountDto accountDto = new AccountDto(userAccount.getEmail(),
-					userAccount.getUserName(), userAccount.getPassword());
-			modelAndView.addObject("myUserAccount", accountDto);
-		} else {
-			modelAndView.addObject("User Error", "User not found, logged out?");
-		}
+		System.out.println(carrierJWTDataObject.getUserName());
+		if (!request.getHeader("Authorization").equals(null))
+			if (activeJWTContainer.authenticateUserRequest(carrierJWTDataObject.getAuthKey(),
+					carrierJWTDataObject.getUserName())) {
+				AccountDto accountDto = new AccountDto(carrierJWTDataObject.getAuthKey() + "",
+						carrierJWTDataObject.getUserName(), carrierJWTDataObject.getUserName());
+				modelAndView.addObject("myUserAccount", accountDto);
+			} else {
+				modelAndView.addObject("User Error", "User not found, logged out?");
+			}
 		return modelAndView;
-
 	}
 
 	@RequestMapping(value = "account/mypassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,27 +96,21 @@ public class AccountController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		// TODO save implementation of change password, need to be logged in JWT
 		// authentication
-		UserAccount userAccount = userAccountRepository
-				.getByUserName("ssstring22");
+		UserAccount userAccount = userAccountRepository.getByUserName("ssstring22");
 		if (userAccount.getPassword().equals(passWordDto.getOldPassWord())) {
-			if (passWordDto.getNewPassWordOne().equals(
-					passWordDto.getNewPassWordTwo())) {
-				if (!userAccount.getPassword().equalsIgnoreCase(
-						passWordDto.getNewPassWordOne())) {
+			if (passWordDto.getNewPassWordOne().equals(passWordDto.getNewPassWordTwo())) {
+				if (!userAccount.getPassword().equalsIgnoreCase(passWordDto.getNewPassWordOne())) {
 					userAccount.setPassword(passWordDto.getNewPassWordOne());
 					userAccountRepository.updateUserAccount(userAccount);
-					modelAndView.addObject("PassWordSucces","PassWord Succesfully Changed");
+					modelAndView.addObject("PassWordSucces", "PassWord Succesfully Changed");
 				} else {
-					modelAndView.addObject("PassWordError",
-							"New PassWord is too similar to Old PassWord");
+					modelAndView.addObject("PassWordError", "New PassWord is too similar to Old PassWord");
 				}
 			} else {
-				modelAndView.addObject("PassWordError",
-						"New PassWord Inputs Don't Match");
+				modelAndView.addObject("PassWordError", "New PassWord Inputs Don't Match");
 			}
 		} else {
-			modelAndView.addObject("PassWordError",
-					"Current PassWord does not match DB");
+			modelAndView.addObject("PassWordError", "Current PassWord does not match DB");
 		}
 		return modelAndView;
 	}
