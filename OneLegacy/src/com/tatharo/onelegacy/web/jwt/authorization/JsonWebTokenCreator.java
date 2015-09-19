@@ -23,15 +23,10 @@ public final class JsonWebTokenCreator {
 		return builder.compact();
 	}
 
-	public static CarrierJWTDataObject createJWT(String jwt) {
+	public static CarrierJWTDataObject decryptJWT(String jwt) {
 		
 		Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary("mysecretsecret"))
 				.parseClaimsJws(jwt).getBody();
-		
-		System.out.println("ID: " + claims.getId());
-		System.out.println("Subject: " + claims.getSubject());
-		System.out.println("Issuer: " + claims.getIssuer());
-		System.out.println("Expiration: " + claims.getExpiration());
 		return new CarrierJWTDataObject( claims.getIssuer(), Long.parseLong(claims.getId()));
 	}
 

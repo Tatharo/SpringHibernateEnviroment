@@ -3,12 +3,9 @@ package com.tatharo.onelegacy.hibernate.domain.model;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Character {
@@ -17,7 +14,9 @@ public class Character {
 	@Basic(optional = false)
 	@Column(name = "ID", unique = true)
 	private long id;
-	private UserAccount userAccount;
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "userId", nullable = false)
+//	private UserAccount userAccount;
 	private String characterName;
 	private String characterClass;
 	private String characterRace;
@@ -25,12 +24,11 @@ public class Character {
 	private String characterOffSpecialization;
 	private byte characterLevel;
 	// TODO: How to Assign
-	private GuildRank guildRank;
+	//private GuildRank guildRank;
 
 	public Character(long id, String characterName, String characterClass, String characterRace,
 			String characterMainSpecialization, String characterOffSpecialization, byte characterLevel,
 			UserAccount userAccount) {
-		super();
 		this.id = id;
 		this.characterName = characterName;
 		this.characterClass = characterClass;
@@ -38,8 +36,8 @@ public class Character {
 		this.characterMainSpecialization = characterMainSpecialization;
 		this.characterOffSpecialization = characterOffSpecialization;
 		this.characterLevel = characterLevel;
-		this.guildRank = GuildRank.NEWMEMBER;
-		this.userAccount = userAccount;
+	//	this.guildRank = GuildRank.NEWMEMBER;
+	//	this.userAccount = userAccount;
 	}
 
 	public long getId() {
@@ -96,23 +94,5 @@ public class Character {
 
 	public void setCharacterLevel(byte characterLevel) {
 		this.characterLevel = characterLevel;
-	}
-
-	public GuildRank getGuildRank() {
-		return guildRank;
-	}
-
-	public void setGuildRank(GuildRank guildRank) {
-		this.guildRank = guildRank;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", nullable = false)
-	public UserAccount getUserAccount() {
-		return userAccount;
-	}
-
-	public void setUserAccount(UserAccount userAccount) {
-		this.userAccount = userAccount;
 	}
 }

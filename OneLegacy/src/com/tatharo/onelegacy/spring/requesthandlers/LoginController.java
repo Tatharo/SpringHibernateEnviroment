@@ -19,8 +19,9 @@ import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 public class LoginController {
 	private UserAccountRepository userAccountRepository;
 	private ActiveJWTContainer activeJWTContainer;
+
 	@Autowired
-	public LoginController(UserAccountRepository userAccountRepository,ActiveJWTContainer activeJWTContainer) {
+	public LoginController(UserAccountRepository userAccountRepository, ActiveJWTContainer activeJWTContainer) {
 		this.userAccountRepository = userAccountRepository;
 		this.activeJWTContainer = activeJWTContainer;
 	}
@@ -28,22 +29,21 @@ public class LoginController {
 	@RequestMapping(value = "account/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public HttpHeaders startLogin(@RequestBody LoginDto loginDto) {
-		// TODO: Maybe create service layer so repositories are not in the
-		// actual REST calls
 		HttpHeaders httpHeaders = new HttpHeaders();
-		UserAccount userAccount = userAccountRepository.getByUserName(loginDto.getUserName());
-		long authKey; 
+		UserAccount userAccount;
+		long authKey;
+		if (userAccountRepository.isUserNameAvailable(loginDto.getUserName())) {
+			userAccount = userAccountRepository.getByUserName(loginDto.getUserName());
 
-		if (userAccount.getPassword().equals(loginDto.getPassWord())) {
-			authKey = activeJWTContainer.addJWTSessionObject(loginDto.getUserName());
-
-			httpHeaders.add("Authorization", JsonWebTokenCreator.createJWT(authKey, loginDto.getUserName()));
-		} else {
-			// Maybe no header returned and/or server side check for multiple
-			// failed login attempts
-			httpHeaders.add("Authorization", "failed");
+			if (userAccount.getPassword().equals(loginDto.getPassWord())) {
+				authKey = activeJWTContainer.addJWTSessionObject(loginDto.getUserName());
+				httpHeaders.add("Authorization", JsonWebTokenCreator.createJWT(authKey, loginDto.getUserName()));
+			} else {
+				// TODO:Maybe no header returned and/or server side check for
+				// multiple failed login attempts
+				httpHeaders.add("Authorization", "failed");
+			}
 		}
-		// TODO: should return authorization header with JWT token
 		return httpHeaders;
 
 	}
