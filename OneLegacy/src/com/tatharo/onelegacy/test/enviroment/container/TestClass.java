@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.springframework.stereotype.Component;
-
 import com.tatharo.onelegacy.spring.dto.baseclasses.ProductBase;
-@Component
+//@Component
 public class TestClass {
 
 	public static List<ProductBase> productList = new ArrayList<ProductBase>();
@@ -41,5 +39,4 @@ public class TestClass {
 		}
 
 	}
-
 }
