@@ -2,6 +2,7 @@
 	- JWT web token $High Priority
 	- Hibernate foreign key Mapping $High priority
 	- PassWord Encryption $Medium priority
+	- Usage of Multithreading $Medium priority
 	- Set properties with .properties file $Low Priority
 	- Generic Repository? $Low Priority
 	- Fix Plain HTML mapping, Spring $Low Priority
