@@ -6,46 +6,43 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-public class Character {
+@Table(name = "WoWCharacter", uniqueConstraints = { @UniqueConstraint(columnNames = "ID") })
+public class WoWCharacter {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "ID", unique = true)
-	private long id;
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "userId", nullable = false)
-//	private UserAccount userAccount;
+	private long characterid;
 	private String characterName;
 	private String characterClass;
 	private String characterRace;
 	private String characterMainSpecialization;
 	private String characterOffSpecialization;
 	private byte characterLevel;
+	@ManyToOne
+	private UserAccount userAccount;
+
 	// TODO: How to Assign
-	//private GuildRank guildRank;
-
-	public Character(long id, String characterName, String characterClass, String characterRace,
-			String characterMainSpecialization, String characterOffSpecialization, byte characterLevel,
-			UserAccount userAccount) {
-		this.id = id;
-		this.characterName = characterName;
-		this.characterClass = characterClass;
-		this.characterRace = characterRace;
-		this.characterMainSpecialization = characterMainSpecialization;
-		this.characterOffSpecialization = characterOffSpecialization;
-		this.characterLevel = characterLevel;
-	//	this.guildRank = GuildRank.NEWMEMBER;
-	//	this.userAccount = userAccount;
+	// private GuildRank guildRank;
+	public long getCharacterid() {
+		return characterid;
 	}
 
-	public long getId() {
-		return id;
+	public void setCharacterid(long characterid) {
+		this.characterid = characterid;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
+
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
 	}
 
 	public String getCharacterName() {
@@ -95,4 +92,5 @@ public class Character {
 	public void setCharacterLevel(byte characterLevel) {
 		this.characterLevel = characterLevel;
 	}
+
 }

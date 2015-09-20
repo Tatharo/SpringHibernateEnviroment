@@ -39,8 +39,6 @@ public class LoginController {
 				authKey = activeJWTContainer.addJWTSessionObject(loginDto.getUserName());
 				httpHeaders.add("Authorization", JsonWebTokenCreator.createJWT(authKey, loginDto.getUserName()));
 			} else {
-				// TODO:Maybe no header returned and/or server side check for
-				// multiple failed login attempts
 				httpHeaders.add("Authorization", "failed");
 			}
 		}

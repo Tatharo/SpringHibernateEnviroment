@@ -66,23 +66,22 @@ public class AccountController {
 		return modelAndView;
 	}
 
-	// JWT testing
 	@RequestMapping(value = "account/myaccount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ModelAndView getAccount(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
-		System.out.println(request.getHeader("Authorization"));
-		CarrierJWTDataObject carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
-		System.out.println(carrierJWTDataObject.getAuthKey());
-
-		System.out.println(carrierJWTDataObject.getUserName());
-		if (!request.getHeader("Authorization").equals(null))
+		CarrierJWTDataObject carrierJWTDataObject = null;
+		try {
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+		} catch (io.jsonwebtoken.MalformedJwtException e) {
+			modelAndView.addObject("Token Invalid", "No user Logged in");
+		}
+		if (carrierJWTDataObject != null)
 			if (activeJWTContainer.authenticateUserRequest(carrierJWTDataObject.getAuthKey(),
 					carrierJWTDataObject.getUserName())) {
-				AccountDto accountDto = new AccountDto(carrierJWTDataObject.getAuthKey() + "",
-						carrierJWTDataObject.getUserName(), carrierJWTDataObject.getUserName());
-				modelAndView.addObject("myUserAccount", accountDto);
+				modelAndView.addObject("myUserAccount", new AccountDto(carrierJWTDataObject.getAuthKey() + "",
+						carrierJWTDataObject.getUserName(), carrierJWTDataObject.getUserName()));
 			} else {
 				modelAndView.addObject("User Error", "User not found, logged out?");
 			}
@@ -91,26 +90,32 @@ public class AccountController {
 
 	@RequestMapping(value = "account/mypassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ModelAndView changePassword(@RequestBody PassWordDto passWordDto) {
+	public ModelAndView changePassword(HttpServletRequest request, @RequestBody PassWordDto passWordDto) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
-		// TODO save implementation of change password, need to be logged in JWT
-		// authentication
-		UserAccount userAccount = userAccountRepository.getByUserName("ssstring22");
-		if (userAccount.getPassword().equals(passWordDto.getOldPassWord())) {
-			if (passWordDto.getNewPassWordOne().equals(passWordDto.getNewPassWordTwo())) {
-				if (!userAccount.getPassword().equalsIgnoreCase(passWordDto.getNewPassWordOne())) {
-					userAccount.setPassword(passWordDto.getNewPassWordOne());
-					userAccountRepository.updateUserAccount(userAccount);
-					modelAndView.addObject("PassWordSucces", "PassWord Succesfully Changed");
+		CarrierJWTDataObject carrierJWTDataObject = null;
+		try {
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+		} catch (io.jsonwebtoken.MalformedJwtException e) {
+			modelAndView.addObject("Token Invalid", "No user Logged in");
+		}
+		if (carrierJWTDataObject != null) {
+			UserAccount userAccount = userAccountRepository.getByUserName(carrierJWTDataObject.getUserName());
+			if (userAccount.getPassword().equals(passWordDto.getOldPassWord())) {
+				if (passWordDto.getNewPassWordOne().equals(passWordDto.getNewPassWordTwo())) {
+					if (!userAccount.getPassword().equalsIgnoreCase(passWordDto.getNewPassWordOne())) {
+						userAccount.setPassword(passWordDto.getNewPassWordOne());
+						userAccountRepository.updateUserAccount(userAccount);
+						modelAndView.addObject("PassWordSucces", "PassWord Succesfully Changed");
+					} else {
+						modelAndView.addObject("PassWordError", "New PassWord is too similar to Old PassWord");
+					}
 				} else {
-					modelAndView.addObject("PassWordError", "New PassWord is too similar to Old PassWord");
+					modelAndView.addObject("PassWordError", "New PassWord Inputs Don't Match");
 				}
 			} else {
-				modelAndView.addObject("PassWordError", "New PassWord Inputs Don't Match");
+				modelAndView.addObject("PassWordError", "Current PassWord does not match DB");
 			}
-		} else {
-			modelAndView.addObject("PassWordError", "Current PassWord does not match DB");
 		}
 		return modelAndView;
 	}

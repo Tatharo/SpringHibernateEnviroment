@@ -1,27 +1,35 @@
 package com.tatharo.onelegacy.hibernate.domain.model;
 
-import javax.persistence.Basic;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(name = "UserAccount", uniqueConstraints = { @UniqueConstraint(columnNames = "ID") })
 public final class UserAccount {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Basic(optional = false)
-	@Column(name = "ID", unique = true)
+	@Column(name = "ID", unique = true, nullable = false)
 	private long userId;
-//	@OneToMany(fetch = FetchType.EAGER, mappedBy = "Character")
-//	private List<Character> characters;
+
 	@Column(unique = true)
 	private String userName;
 	// TODO Password Encryption
 	private String password;
 	@Column(unique = true)
 	private String email;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "CHARACTER_ID")
+	private List<WoWCharacter> characters;
 
 	public UserAccount() {
 	}
@@ -48,14 +56,13 @@ public final class UserAccount {
 		return email;
 	}
 
-
-//	public List<Character> getCharacters() {
-//		return characters;
-//	}
-//
-//	public void setCharacters(List<Character> characters) {
-//		this.characters = characters;
-//	}
+	// public List<Character> getCharacters() {
+	// return characters;
+	// }
+	//
+	// public void setCharacters(List<Character> characters) {
+	// this.characters = characters;
+	// }
 
 	public void setUserName(String userName) {
 		this.userName = userName;
