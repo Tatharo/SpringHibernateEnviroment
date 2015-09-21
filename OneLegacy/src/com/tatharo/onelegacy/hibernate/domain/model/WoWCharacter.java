@@ -27,6 +27,20 @@ public class WoWCharacter {
 	@ManyToOne
 	private UserAccount userAccount;
 
+	public WoWCharacter(String characterName, String characterClass, String characterRace,
+			String characterMainSpecialization, String characterOffSpecialization, byte characterLevel,
+			UserAccount userAccount) {
+		this.characterName = characterName;
+		this.characterClass = characterClass;
+		this.characterRace = characterRace;
+		this.characterMainSpecialization = characterMainSpecialization;
+		this.characterOffSpecialization = characterOffSpecialization;
+		this.characterLevel = characterLevel;
+		this.userAccount = userAccount;
+	}
+
+	public WoWCharacter() {}
+
 	// TODO: How to Assign
 	// private GuildRank guildRank;
 	public long getCharacterid() {

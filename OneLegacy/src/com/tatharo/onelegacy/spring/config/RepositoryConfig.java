@@ -23,7 +23,7 @@ public class RepositoryConfig {
 
 	// TODO: properties file...
 	private String driverClassName = "com.mysql.jdbc.Driver";
-	private String url = "jdbc:mysql://localhost:3306/persons";
+	private String url = "jdbc:mysql://localhost:3306/onelegacy_dev";
 	private String username = "root";
 	private String password = "";
 
