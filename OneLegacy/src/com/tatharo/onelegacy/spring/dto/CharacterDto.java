@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CharacterDto {
+public final class CharacterDto {
 	@NotNull
 	private final String characterName;
 	@NotNull

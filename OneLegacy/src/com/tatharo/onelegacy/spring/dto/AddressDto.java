@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AddressDto {
+public final class AddressDto {
 	@NotNull
 	private final String country;
 	private final String province;
@@ -16,7 +16,7 @@ public class AddressDto {
 	@JsonCreator
 	public AddressDto(@JsonProperty("country")String country, @JsonProperty("province")String province, @JsonProperty("city")String city,
 			@JsonProperty("street")String street,@JsonProperty("streetNumber") String streetNumber,@JsonProperty("zipCode") String zipCode) {
-		super();
+
 		this.country = country;
 		this.province = province;
 		this.city = city;

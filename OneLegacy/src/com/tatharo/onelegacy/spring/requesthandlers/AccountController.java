@@ -2,6 +2,7 @@ package com.tatharo.onelegacy.spring.requesthandlers;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import static com.tatharo.onelegacy.spring.config.FixedVariables.securityHeader;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.hibernate.exception.ConstraintViolationException;
@@ -73,7 +74,7 @@ public class AccountController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		CarrierJWTDataObject carrierJWTDataObject = null;
 		try {
-			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader(securityHeader));
 		} catch (io.jsonwebtoken.MalformedJwtException e) {
 			modelAndView.addObject("Token Invalid", "No user Logged in");
 		}

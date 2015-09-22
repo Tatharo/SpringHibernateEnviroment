@@ -1,6 +1,7 @@
 package com.tatharo.onelegacy.spring.requesthandlers;
 
 import javax.servlet.http.HttpServletRequest;
+import static com.tatharo.onelegacy.spring.config.FixedVariables.securityHeader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 
 @Controller
 public class AccountDetailsController {
+	
 	@Autowired
 	public AccountDetailsController(CharacterRepository characterRepository, ActiveJWTContainer activeJWTContainer,
 			UserAccountRepository userAccountRepository) {
@@ -45,7 +47,7 @@ public class AccountDetailsController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		CarrierJWTDataObject carrierJWTDataObject = null;
 		try {
-			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader(securityHeader));
 		} catch (io.jsonwebtoken.MalformedJwtException e) {
 			modelAndView.addObject("Token Invalid", "No user Logged in");
 		}
@@ -56,7 +58,7 @@ public class AccountDetailsController {
 				modelAndView.addObject("myUserAccount", new AccountDto(carrierJWTDataObject.getAuthKey() + "",
 						carrierJWTDataObject.getUserName(), carrierJWTDataObject.getUserName()));
 			} else {
-				modelAndView.addObject("User Error", "User not found, logged out?");
+				modelAndView.addObject("UserError", "User not found, logged out?");
 			}
 		return modelAndView;
 	}
@@ -67,7 +69,7 @@ public class AccountDetailsController {
 		ModelAndView modelAndView = new ModelAndView();
 		CarrierJWTDataObject carrierJWTDataObject = null;
 		try {
-			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader(securityHeader));
 		} catch (io.jsonwebtoken.MalformedJwtException e) {
 			modelAndView.addObject("TokenInvalid", "No user Logged in");
 		}
@@ -95,7 +97,7 @@ public class AccountDetailsController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		CarrierJWTDataObject carrierJWTDataObject = null;
 		try {
-			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader(securityHeader));
 		} catch (io.jsonwebtoken.MalformedJwtException e) {
 			modelAndView.addObject("TokenInvalid", "No user Logged in");
 		}
@@ -104,8 +106,7 @@ public class AccountDetailsController {
 					carrierJWTDataObject.getUserName())) {
 
 				UserAccount userAccount = userAccountRepository.getByUserName(carrierJWTDataObject.getUserName());
-				// TODO: how to utilize this list front end what data is
-				// relevant at first
+				// TODO: FRONT END REQUIREMENTS?
 				for (WoWCharacter wowChar : userAccount.getCharacters()) {
 
 					modelAndView.addObject(wowChar.getCharacterName(), wowChar.getCharacterClass());
@@ -124,7 +125,7 @@ public class AccountDetailsController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		CarrierJWTDataObject carrierJWTDataObject = null;
 		try {
-			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader(securityHeader));
 		} catch (io.jsonwebtoken.MalformedJwtException e) {
 			modelAndView.addObject("TokenInvalid", "No user Logged in");
 		}
@@ -135,6 +136,32 @@ public class AccountDetailsController {
 				userAccount.setPerson(new Person(personDto.getFirstName(), personDto.getMiddleName(),
 						personDto.getLastname(), userAccount, personDto.getDateOfBirth(), personDto.getGender()));
 				userAccountRepository.updateUserAccount(userAccount);
+				modelAndView.addObject("Person", "Created");
+			} else {
+				modelAndView.addObject("UserError", "User not found, logged out?");
+			}
+		return modelAndView;
+	}
+	@RequestMapping(value = "myaccount/person", method = RequestMethod.GET,  produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ModelAndView getPerson(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setView(new MappingJackson2JsonView());
+		CarrierJWTDataObject carrierJWTDataObject = null;
+		try {
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader(securityHeader));
+		} catch (io.jsonwebtoken.MalformedJwtException e) {
+			modelAndView.addObject("TokenInvalid", "No user Logged in");
+		}
+		if (carrierJWTDataObject != null)
+			if (activeJWTContainer.authenticateUserRequest(carrierJWTDataObject.getAuthKey(),
+					carrierJWTDataObject.getUserName())) {
+				UserAccount userAccount = userAccountRepository.getByUserName(carrierJWTDataObject.getUserName());
+				Person person = userAccount.getPerson();
+				modelAndView.addObject(person.getFirstName(), person.getFirstName());
+				modelAndView.addObject(person.getMiddleName(), person.getMiddleName());
+				modelAndView.addObject(person.getLastName(), person.getLastName());
+				// TODO: FRONT END REQUIREMENTS?
 			} else {
 				modelAndView.addObject("UserError", "User not found, logged out?");
 			}

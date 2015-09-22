@@ -3,7 +3,7 @@ package com.tatharo.onelegacy.spring.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 //TODO make application form related methods
-public class ApplicationFormDto {
+public final class ApplicationFormDto {
 	private final String userName;
 	private final String email;
 	private final String passWord;

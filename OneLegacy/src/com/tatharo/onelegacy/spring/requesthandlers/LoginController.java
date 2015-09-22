@@ -1,5 +1,7 @@
 package com.tatharo.onelegacy.spring.requesthandlers;
 
+import static com.tatharo.onelegacy.spring.config.FixedVariables.securityHeader;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ public class LoginController {
 	private UserAccountRepository userAccountRepository;
 	private ActiveJWTContainer activeJWTContainer;
 	private UserAccountService userAccountService;
+	
 	@Autowired
 	public LoginController(UserAccountRepository userAccountRepository, ActiveJWTContainer activeJWTContainer, UserAccountService userAccountService) {
 		this.userAccountRepository = userAccountRepository;
@@ -37,9 +40,9 @@ public class LoginController {
 			userAccount = userAccountRepository.getByUserName(loginDto.getUserName());
 			if (userAccount.getPassword().equals(userAccountService.cryptWithMD5(loginDto.getPassWord()))) {
 				long authKey = activeJWTContainer.addJWTSessionObject(loginDto.getUserName());
-				httpHeaders.add("Authorization", JsonWebTokenCreator.createJWT(authKey, loginDto.getUserName()));
+				httpHeaders.add(securityHeader, JsonWebTokenCreator.createJWT(authKey, loginDto.getUserName()));
 			} else {
-				httpHeaders.add("Authorization", "failed");
+				httpHeaders.add(securityHeader, "failed");
 			}
 		}
 		return httpHeaders;
