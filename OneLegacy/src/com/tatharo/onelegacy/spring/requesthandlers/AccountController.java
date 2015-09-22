@@ -17,9 +17,9 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 import com.tatharo.onelegacy.hibernate.domain.repository.UserAccountRepository;
+import com.tatharo.onelegacy.hibernate.domain.service.UserAccountService;
 import com.tatharo.onelegacy.spring.dto.AccountDto;
 import com.tatharo.onelegacy.spring.dto.PassWordDto;
-import com.tatharo.onelegacy.web.jwt.authorization.ActiveJWTContainer;
 import com.tatharo.onelegacy.web.jwt.authorization.CarrierJWTDataObject;
 import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 
@@ -27,13 +27,12 @@ import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 public class AccountController {
 
 	@Autowired
-	public AccountController(ActiveJWTContainer activeJWTContainer, UserAccountRepository userAccountRepository) {
+	public AccountController(UserAccountRepository userAccountRepository,UserAccountService userAccountService) {
 		this.userAccountRepository = userAccountRepository;
-		this.activeJWTContainer = activeJWTContainer;
+		this.userAccountService= userAccountService;
 	}
-
+	private UserAccountService userAccountService;
 	private UserAccountRepository userAccountRepository;
-	private ActiveJWTContainer activeJWTContainer;
 
 	@RequestMapping(value = "account/subscribe", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView createAccount(@Valid @RequestBody AccountDto accountDto) {
@@ -42,8 +41,7 @@ public class AccountController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		if (EmailValidator.getInstance().isValid(accountDto.getEmail())) {
 			try {
-				UserAccount userAccount = new UserAccount(accountDto.getUserName(), accountDto.getPassWord(),
-						accountDto.getEmail());
+
 				if (userAccountRepository.isEmailAvailable(accountDto.getEmail())) {
 					modelAndView.addObject("EmailCheck", "Email is already taken");
 					startTransaction = false;
@@ -53,6 +51,8 @@ public class AccountController {
 					startTransaction = false;
 				}
 				if (startTransaction) {
+					UserAccount userAccount = new UserAccount(accountDto.getUserName(),
+							userAccountService.cryptWithMD5(accountDto.getPassWord()), accountDto.getEmail());
 					userAccountRepository.saveUserAccount(userAccount);
 					modelAndView.addObject("UserAccount", "Account Created");
 				}
@@ -66,29 +66,7 @@ public class AccountController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "account/myaccount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public ModelAndView getAccount(HttpServletRequest request) {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setView(new MappingJackson2JsonView());
-		CarrierJWTDataObject carrierJWTDataObject = null;
-		try {
-			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
-		} catch (io.jsonwebtoken.MalformedJwtException e) {
-			modelAndView.addObject("Token Invalid", "No user Logged in");
-		}
-		if (carrierJWTDataObject != null)
-			if (activeJWTContainer.authenticateUserRequest(carrierJWTDataObject.getAuthKey(),
-					carrierJWTDataObject.getUserName())) {
-				modelAndView.addObject("myUserAccount", new AccountDto(carrierJWTDataObject.getAuthKey() + "",
-						carrierJWTDataObject.getUserName(), carrierJWTDataObject.getUserName()));
-			} else {
-				modelAndView.addObject("User Error", "User not found, logged out?");
-			}
-		return modelAndView;
-	}
-
-	@RequestMapping(value = "account/mypassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "myaccount/password", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ModelAndView changePassword(HttpServletRequest request, @RequestBody PassWordDto passWordDto) {
 		ModelAndView modelAndView = new ModelAndView();
@@ -101,7 +79,7 @@ public class AccountController {
 		}
 		if (carrierJWTDataObject != null) {
 			UserAccount userAccount = userAccountRepository.getByUserName(carrierJWTDataObject.getUserName());
-			if (userAccount.getPassword().equals(passWordDto.getOldPassWord())) {
+			if (userAccount.getPassword().equals(userAccountService.cryptWithMD5(passWordDto.getOldPassWord()))) {
 				if (passWordDto.getNewPassWordOne().equals(passWordDto.getNewPassWordTwo())) {
 					if (!userAccount.getPassword().equalsIgnoreCase(passWordDto.getNewPassWordOne())) {
 						userAccount.setPassword(passWordDto.getNewPassWordOne());

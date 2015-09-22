@@ -1,35 +1,33 @@
 package com.tatharo.onelegacy.hibernate.domain.model;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+
 
 @Entity
-@Table(name = "WoWCharacter", uniqueConstraints = { @UniqueConstraint(columnNames = "ID") })
 public class WoWCharacter {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Basic(optional = false)
-	@Column(name = "ID", unique = true)
+	@Column(name = "CHARACTER_ID",unique = true, nullable = false)
 	private long id;
-	
-	@GeneratedValue
-	@Column(name = "CHARACTER_ID")
-	private long characterid;
+	@Column(unique=true)
 	private String characterName;
 	private String characterClass;
 	private String characterRace;
 	private String characterMainSpecialization;
 	private String characterOffSpecialization;
 	private byte characterLevel;
+	private GuildRank rank;
 	@ManyToOne
 	private UserAccount userAccount;
+
+
+	public WoWCharacter() {
+	}
 
 	public WoWCharacter(String characterName, String characterClass, String characterRace,
 			String characterMainSpecialization, String characterOffSpecialization, byte characterLevel,
@@ -41,18 +39,19 @@ public class WoWCharacter {
 		this.characterOffSpecialization = characterOffSpecialization;
 		this.characterLevel = characterLevel;
 		this.userAccount = userAccount;
+		
 	}
 
-	public WoWCharacter() {}
-
-	// TODO: How to Assign
-	// private GuildRank guildRank;
-	public long getCharacterid() {
-		return characterid;
+	public GuildRank getRank() {
+		return rank;
 	}
 
-	public void setCharacterid(long characterid) {
-		this.characterid = characterid;
+	public void setRank(GuildRank rank) {
+		this.rank = rank;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public UserAccount getUserAccount() {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 import com.tatharo.onelegacy.hibernate.domain.repository.UserAccountRepository;
+import com.tatharo.onelegacy.hibernate.domain.service.UserAccountService;
 import com.tatharo.onelegacy.spring.dto.LoginDto;
 import com.tatharo.onelegacy.web.jwt.authorization.ActiveJWTContainer;
 import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
@@ -19,11 +20,12 @@ import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 public class LoginController {
 	private UserAccountRepository userAccountRepository;
 	private ActiveJWTContainer activeJWTContainer;
-
+	private UserAccountService userAccountService;
 	@Autowired
-	public LoginController(UserAccountRepository userAccountRepository, ActiveJWTContainer activeJWTContainer) {
+	public LoginController(UserAccountRepository userAccountRepository, ActiveJWTContainer activeJWTContainer, UserAccountService userAccountService) {
 		this.userAccountRepository = userAccountRepository;
 		this.activeJWTContainer = activeJWTContainer;
+		this.userAccountService = userAccountService;
 	}
 
 	@RequestMapping(value = "account/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -31,19 +33,15 @@ public class LoginController {
 	public HttpHeaders startLogin(@RequestBody LoginDto loginDto) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		UserAccount userAccount;
-		long authKey;
 		if (userAccountRepository.isUserNameAvailable(loginDto.getUserName())) {
 			userAccount = userAccountRepository.getByUserName(loginDto.getUserName());
-
-			if (userAccount.getPassword().equals(loginDto.getPassWord())) {
-				authKey = activeJWTContainer.addJWTSessionObject(loginDto.getUserName());
+			if (userAccount.getPassword().equals(userAccountService.cryptWithMD5(loginDto.getPassWord()))) {
+				long authKey = activeJWTContainer.addJWTSessionObject(loginDto.getUserName());
 				httpHeaders.add("Authorization", JsonWebTokenCreator.createJWT(authKey, loginDto.getUserName()));
 			} else {
 				httpHeaders.add("Authorization", "failed");
 			}
 		}
 		return httpHeaders;
-
 	}
-
 }

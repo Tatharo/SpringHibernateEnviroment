@@ -17,7 +17,6 @@ public class CharacterDto {
 	private final String characterOffSpecialization;
 	@NotNull
 	private final byte characterLevel;
-	//TODO: How to Assign
 
 	@JsonCreator
 	public CharacterDto(

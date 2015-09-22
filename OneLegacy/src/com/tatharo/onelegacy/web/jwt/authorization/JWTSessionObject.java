@@ -23,7 +23,6 @@ public final class JWTSessionObject {
 		return lastUsed;
 	}
 
-	// TODO:fixed variable relocate?
 	public boolean authenticateJWT(long currentTime, long authKey, String userName) {
 		if (currentTime >= this.lastUsed && (currentTime - (FixedVariables.sessionLengthInMinutes * 60 * 1000)) <= this.lastUsed) {
 			if (this.userName.equals(userName) && this.authenticationId == authKey) {

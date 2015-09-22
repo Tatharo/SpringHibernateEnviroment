@@ -1,0 +1,18 @@
+@RequestMapping(value = "myaccount/characters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ModelAndView updatePerson(HttpServletRequest request) {
+	ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setView(new MappingJackson2JsonView());
+		CarrierJWTDataObject carrierJWTDataObject = null;
+		try {
+			carrierJWTDataObject = JsonWebTokenCreator.decryptJWT(request.getHeader("Authorization"));
+		} catch (io.jsonwebtoken.MalformedJwtException e) {
+			modelAndView.addObject("TokenInvalid", "No user Logged in");
+			
+		}
+		if (carrierJWTDataObject != null)
+			if (activeJWTContainer.authenticateUserRequest(carrierJWTDataObject.getAuthKey(),
+					carrierJWTDataObject.getUserName())){
+				
+			}
+		return modelAndView;

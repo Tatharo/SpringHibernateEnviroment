@@ -9,17 +9,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.OneToOne;
 
 @Entity
-@Table(name = "UserAccount", uniqueConstraints = { @UniqueConstraint(columnNames = "ID") })
 public final class UserAccount {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
+	@Column(name = "USER_ID", unique = true, nullable = false)
 	private long userId;
 
 	@Column(unique = true)
@@ -28,9 +25,10 @@ public final class UserAccount {
 	private String password;
 	@Column(unique = true)
 	private String email;
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "CHARACTER_ID")
+	@OneToMany(targetEntity=WoWCharacter.class,mappedBy="userAccount",fetch = FetchType.EAGER)
 	private List<WoWCharacter> characters;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Person person;
 
 	public UserAccount() {
 	}
@@ -39,6 +37,14 @@ public final class UserAccount {
 		this.userName = userName;
 		this.password = password;
 		this.email = email;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 
 	public String getUserName() {
@@ -56,7 +62,6 @@ public final class UserAccount {
 	public String getEmail() {
 		return email;
 	}
-
 
 
 	public List<WoWCharacter> getCharacters() {
@@ -78,9 +83,4 @@ public final class UserAccount {
 	public long getUserId() {
 		return userId;
 	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
 }
