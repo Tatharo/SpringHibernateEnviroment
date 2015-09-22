@@ -1,13 +1,25 @@
 package com.tatharo.onelegacy.hibernate.domain.model;
 
 import java.util.Date;
+
 //TODO Triggers after account creation to be validated
 public class NewAccountTriggers {
+	
+	
 	private Date creationDate;
 	private String validationKey;
+	private boolean passWordAutoGen = false;
 	private boolean validated = false;
 	private boolean setPerson = false;
 	private boolean setCharacter = false;
+	
+	
+	public boolean isPassWordAutoGen() {
+		return passWordAutoGen;
+	}
+	public void setPassWordAutoGen(boolean passWordAutoGen) {
+		this.passWordAutoGen = passWordAutoGen;
+	}
 	public Date getCreationDate() {
 		return creationDate;
 	}
