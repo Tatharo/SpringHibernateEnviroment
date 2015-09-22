@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public final class UserAccount {
 	private String password;
 	@Column(unique = true)
 	private String email;
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "CHARACTER_ID")
 	private List<WoWCharacter> characters;
 
@@ -56,13 +57,15 @@ public final class UserAccount {
 		return email;
 	}
 
-	// public List<Character> getCharacters() {
-	// return characters;
-	// }
-	//
-	// public void setCharacters(List<Character> characters) {
-	// this.characters = characters;
-	// }
+
+
+	public List<WoWCharacter> getCharacters() {
+		return characters;
+	}
+
+	public void setCharacters(List<WoWCharacter> characters) {
+		this.characters = characters;
+	}
 
 	public void setUserName(String userName) {
 		this.userName = userName;

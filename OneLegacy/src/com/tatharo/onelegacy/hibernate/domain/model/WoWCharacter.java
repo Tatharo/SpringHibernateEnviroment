@@ -17,6 +17,10 @@ public class WoWCharacter {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Basic(optional = false)
 	@Column(name = "ID", unique = true)
+	private long id;
+	
+	@GeneratedValue
+	@Column(name = "CHARACTER_ID")
 	private long characterid;
 	private String characterName;
 	private String characterClass;
