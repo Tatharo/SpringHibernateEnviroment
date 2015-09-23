@@ -36,9 +36,9 @@ public class AccountDetailsController {
 		this.userAccountRepository = userAccountRepository;
 	}
 
-	private CharacterRepository characterRepository;
-	private ActiveJWTContainer activeJWTContainer;
-	private UserAccountRepository userAccountRepository;
+	private final CharacterRepository characterRepository;
+	private final ActiveJWTContainer activeJWTContainer;
+	private final UserAccountRepository userAccountRepository;
 
 	@RequestMapping(value = "myaccount/useraccount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody

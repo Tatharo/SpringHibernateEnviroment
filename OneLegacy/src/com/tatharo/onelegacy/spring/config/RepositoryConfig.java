@@ -25,7 +25,7 @@ public class RepositoryConfig {
 	private String driverClassName = "com.mysql.jdbc.Driver";
 	private String url = "jdbc:mysql://localhost:3306/onelegacy_dev";
 	private String username = "root";
-	private String password = "root";
+	private String password = "";
 
 	private DataSource getDataSource() {
 		BasicDataSource dataSource = new BasicDataSource();

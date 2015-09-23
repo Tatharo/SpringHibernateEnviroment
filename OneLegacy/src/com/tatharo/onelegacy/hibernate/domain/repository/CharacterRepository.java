@@ -13,7 +13,7 @@ public class CharacterRepository{
 	public CharacterRepository(SessionFactory sf){
 		this.sf = sf;
 	}
-	private SessionFactory sf;
+	private final SessionFactory sf;
 	@Transactional
 	public void saveCharacterToUserAccount(WoWCharacter character){
 		sf.getCurrentSession().save(character);

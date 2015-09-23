@@ -20,9 +20,9 @@ import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 
 @RestController
 public class LoginController {
-	private UserAccountRepository userAccountRepository;
-	private ActiveJWTContainer activeJWTContainer;
-	private UserAccountService userAccountService;
+	private final UserAccountRepository userAccountRepository;
+	private final ActiveJWTContainer activeJWTContainer;
+	private final UserAccountService userAccountService;
 	
 	@Autowired
 	public LoginController(UserAccountRepository userAccountRepository, ActiveJWTContainer activeJWTContainer, UserAccountService userAccountService) {

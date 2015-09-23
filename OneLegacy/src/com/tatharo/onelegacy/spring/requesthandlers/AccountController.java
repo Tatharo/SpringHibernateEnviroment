@@ -32,8 +32,8 @@ public class AccountController {
 		this.userAccountRepository = userAccountRepository;
 		this.userAccountService= userAccountService;
 	}
-	private UserAccountService userAccountService;
-	private UserAccountRepository userAccountRepository;
+	private final UserAccountService userAccountService;
+	private final UserAccountRepository userAccountRepository;
 
 	@RequestMapping(value = "account/subscribe", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ModelAndView createAccount(@Valid @RequestBody AccountDto accountDto) {

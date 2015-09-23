@@ -29,6 +29,8 @@ public final class UserAccount {
 	private List<WoWCharacter> characters;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Person person;
+	@OneToOne
+	private AccountTriggers accountTriggers;
 
 	public UserAccount() {
 	}
@@ -83,4 +85,13 @@ public final class UserAccount {
 	public long getUserId() {
 		return userId;
 	}
+
+	public AccountTriggers getAccountTriggers() {
+		return accountTriggers;
+	}
+
+	public void setAccountTriggers(AccountTriggers accountTriggers) {
+		this.accountTriggers = accountTriggers;
+	}
+	
 }

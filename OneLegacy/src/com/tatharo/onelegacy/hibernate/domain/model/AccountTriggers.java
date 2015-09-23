@@ -2,16 +2,29 @@ package com.tatharo.onelegacy.hibernate.domain.model;
 
 import java.util.Date;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
 //TODO Triggers after account creation to be validated
-public class NewAccountTriggers {
+public class AccountTriggers {
 	
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "ID",unique = true)
+	private long id;
 	private Date creationDate;
 	private String validationKey;
 	private boolean passWordAutoGen = false;
 	private boolean validated = false;
 	private boolean setPerson = false;
 	private boolean setCharacter = false;
+	@OneToOne
+	private UserAccount userAccount;
 	
 	
 	public boolean isPassWordAutoGen() {
