@@ -34,7 +34,7 @@ public class ApplicationController {
 				applicationFormDto.getCharacterMainSpecialization(), applicationFormDto.getCharacterOffSpecialization(),
 				applicationFormDto.getCharacterLevel(), applicationFormDto.getItemLevel(),
 				applicationFormDto.getPreviousRaidingExperience());
-		applicationDataRepository.saveApplicationData(applicationData);
+		applicationDataRepository.saveObject(applicationData);
 		return modelAndView;
 	}
 }

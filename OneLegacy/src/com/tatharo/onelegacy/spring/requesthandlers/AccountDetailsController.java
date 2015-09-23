@@ -27,7 +27,7 @@ import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 
 @Controller
 public class AccountDetailsController {
-	
+
 	@Autowired
 	public AccountDetailsController(CharacterRepository characterRepository, ActiveJWTContainer activeJWTContainer,
 			UserAccountRepository userAccountRepository) {
@@ -54,7 +54,7 @@ public class AccountDetailsController {
 		if (carrierJWTDataObject != null)
 			if (activeJWTContainer.authenticateUserRequest(carrierJWTDataObject.getAuthKey(),
 					carrierJWTDataObject.getUserName())) {
-				//TODO FRONT END REQUIREMENTS?
+				// TODO FRONT END REQUIREMENTS?
 				modelAndView.addObject("myUserAccount", new AccountDto(carrierJWTDataObject.getAuthKey() + "",
 						carrierJWTDataObject.getUserName(), carrierJWTDataObject.getUserName()));
 			} else {
@@ -81,7 +81,7 @@ public class AccountDetailsController {
 						characterDto.getCharacterMainSpecialization(), characterDto.getCharacterOffSpecialization(),
 						characterDto.getCharacterLevel(),
 						userAccountRepository.getByUserName(carrierJWTDataObject.getUserName()));
-				characterRepository.saveCharacterToUserAccount(wowCharacter);
+				characterRepository.saveObject(wowCharacter);
 				modelAndView.addObject("Character", "Character Added");
 			} else {
 				modelAndView.addObject("UserError", "User not found, logged out?");
@@ -135,14 +135,15 @@ public class AccountDetailsController {
 				UserAccount userAccount = userAccountRepository.getByUserName(carrierJWTDataObject.getUserName());
 				userAccount.setPerson(new Person(personDto.getFirstName(), personDto.getMiddleName(),
 						personDto.getLastname(), userAccount, personDto.getDateOfBirth(), personDto.getGender()));
-				userAccountRepository.updateUserAccount(userAccount);
+				userAccountRepository.updateObject(userAccount);
 				modelAndView.addObject("Person", "Created");
 			} else {
 				modelAndView.addObject("UserError", "User not found, logged out?");
 			}
 		return modelAndView;
 	}
-	@RequestMapping(value = "myaccount/person", method = RequestMethod.GET,  produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "myaccount/person", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ModelAndView getPerson(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();

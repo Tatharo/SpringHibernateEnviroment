@@ -54,7 +54,7 @@ public class AccountController {
 				if (startTransaction) {
 					UserAccount userAccount = new UserAccount(accountDto.getUserName(),
 							userAccountService.cryptWithMD5(accountDto.getPassWord()), accountDto.getEmail());
-					userAccountRepository.saveUserAccount(userAccount);
+					userAccountRepository.saveObject(userAccount);
 					modelAndView.addObject("UserAccount", "Account Created");
 				}
 			} catch (ConstraintViolationException e) {
@@ -84,7 +84,7 @@ public class AccountController {
 				if (passWordDto.getNewPassWordOne().equals(passWordDto.getNewPassWordTwo())) {
 					if (!userAccount.getPassword().equalsIgnoreCase(passWordDto.getNewPassWordOne())) {
 						userAccount.setPassword(passWordDto.getNewPassWordOne());
-						userAccountRepository.updateUserAccount(userAccount);
+						userAccountRepository.saveObject(userAccount);
 						modelAndView.addObject("PassWordSucces", "PassWord Succesfully Changed");
 					} else {
 						modelAndView.addObject("PassWordError", "New PassWord is too similar to Old PassWord");
