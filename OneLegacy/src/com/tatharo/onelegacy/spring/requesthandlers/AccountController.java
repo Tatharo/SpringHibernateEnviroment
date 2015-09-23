@@ -28,10 +28,11 @@ import com.tatharo.onelegacy.web.jwt.authorization.JsonWebTokenCreator;
 public class AccountController {
 
 	@Autowired
-	public AccountController(UserAccountRepository userAccountRepository,UserAccountService userAccountService) {
+	public AccountController(UserAccountRepository userAccountRepository, UserAccountService userAccountService) {
 		this.userAccountRepository = userAccountRepository;
-		this.userAccountService= userAccountService;
+		this.userAccountService = userAccountService;
 	}
+
 	private final UserAccountService userAccountService;
 	private final UserAccountRepository userAccountRepository;
 
@@ -42,7 +43,6 @@ public class AccountController {
 		modelAndView.setView(new MappingJackson2JsonView());
 		if (EmailValidator.getInstance().isValid(accountDto.getEmail())) {
 			try {
-
 				if (userAccountRepository.isEmailAvailable(accountDto.getEmail())) {
 					modelAndView.addObject("EmailCheck", "Email is already taken");
 					startTransaction = false;
@@ -69,7 +69,7 @@ public class AccountController {
 
 	@RequestMapping(value = "myaccount/password", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ModelAndView changePassword(HttpServletRequest request, @RequestBody PassWordDto passWordDto) {
+	public ModelAndView changePassword(HttpServletRequest request, @Valid @RequestBody PassWordDto passWordDto) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
 		CarrierJWTDataObject carrierJWTDataObject = null;

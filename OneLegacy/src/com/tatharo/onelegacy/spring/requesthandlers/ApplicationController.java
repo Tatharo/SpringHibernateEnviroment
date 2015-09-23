@@ -1,5 +1,7 @@
 package com.tatharo.onelegacy.spring.requesthandlers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,16 +27,15 @@ public class ApplicationController {
 	// TODO: Application creation
 	@RequestMapping(value = "guild/application", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ModelAndView createApplication(@RequestBody ApplicationFormDto applicationFormDto) {
+	public ModelAndView createApplication(@Valid @RequestBody ApplicationFormDto applicationFormDto) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setView(new MappingJackson2JsonView());
-		ApplicationData applicationData = new ApplicationData(applicationFormDto.getUserName(),
+		applicationDataRepository.saveObject(new ApplicationData(applicationFormDto.getUserName(),
 				applicationFormDto.getEmail(), applicationFormDto.getPassWord(), applicationFormDto.getCharacterName(),
 				applicationFormDto.getCharacterClass(), applicationFormDto.getCharacterRace(),
 				applicationFormDto.getCharacterMainSpecialization(), applicationFormDto.getCharacterOffSpecialization(),
 				applicationFormDto.getCharacterLevel(), applicationFormDto.getItemLevel(),
-				applicationFormDto.getPreviousRaidingExperience());
-		applicationDataRepository.saveObject(applicationData);
+				applicationFormDto.getPreviousRaidingExperience()));
 		return modelAndView;
 	}
 }

@@ -1,28 +1,55 @@
 package com.tatharo.onelegacy.spring.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 //TODO make application form related methods
 public final class ApplicationFormDto {
+
 	// UserAccount
+	@NotNull
+	@Size(min = 4, max = 20)
 	private final String userName;
+	@NotNull
+	@Size(min = 5)
 	private final String email;
+	@NotNull
+	@Size(min = 8, max = 20)
 	private final String passWord;
 	// Main Character
+	@Size(max = 12)
 	private final String characterName;
+	// dropdown?
+	@NotNull
 	private final String characterClass;
+	// dropdown
+	@NotNull
 	private final String characterRace;
+	// dropdown
+	@NotNull
 	private final String characterMainSpecialization;
+	// dropdown
+	@NotNull
 	private final String characterOffSpecialization;
+	@Size(min = 2)
 	private final byte characterLevel;
 	// Temporary Application details
+	@NotNull
+	@Size(min = 3, max = 3)
 	private final int itemLevel;
 	private final String previousRaidingExperience;
 
 	@JsonCreator
-	public ApplicationFormDto(String userName, String email, String passWord, String characterName,
-			String characterClass, String characterRace, String characterMainSpecialization,
-			String characterOffSpecialization, byte characterLevel, int itemLevel, String previousRaidingExperience) {
+	public ApplicationFormDto(@JsonProperty("userName") String userName, @JsonProperty("email") String email,
+			@JsonProperty("passWord") String passWord, @JsonProperty("characterName") String characterName,
+			@JsonProperty("characterClass") String characterClass, @JsonProperty("characterRace") String characterRace,
+			@JsonProperty("characterMainSpecialization") String characterMainSpecialization,
+			@JsonProperty("characterOffSpecialization") String characterOffSpecialization,
+			@JsonProperty("characterLevel") byte characterLevel, @JsonProperty("itemLevel") int itemLevel,
+			@JsonProperty("previousRaidingExperience") String previousRaidingExperience) {
 		this.userName = userName;
 		this.email = email;
 		this.passWord = passWord;

@@ -23,10 +23,17 @@ public class AccountTriggers {
 	private boolean validated = false;
 	private boolean setPerson = false;
 	private boolean setCharacter = false;
+	private Date lastLogin;
 	@OneToOne
 	private UserAccount userAccount;
 	
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public boolean isPassWordAutoGen() {
 		return passWordAutoGen;
 	}
@@ -62,6 +69,18 @@ public class AccountTriggers {
 	}
 	public void setSetCharacter(boolean setCharacter) {
 		this.setCharacter = setCharacter;
+	}
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
 	}
 	
 
