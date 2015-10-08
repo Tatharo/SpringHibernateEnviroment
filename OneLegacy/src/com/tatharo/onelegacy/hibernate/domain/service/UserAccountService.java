@@ -29,7 +29,7 @@ public class UserAccountService {
 			Transport.send(message);
 			System.out.println("Sent message successfully....");
 		} catch (MessagingException mex) {
-			System.out.println("hoi");
+			System.out.println("Failed");
 			mex.printStackTrace();
 		}
 	}

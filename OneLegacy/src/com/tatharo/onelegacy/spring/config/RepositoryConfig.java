@@ -14,6 +14,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.tatharo.onelegacy.hibernate.domain.model.WoWCharacter;
+import com.tatharo.onelegacy.hibernate.domain.model.AccountTriggers;
 import com.tatharo.onelegacy.hibernate.domain.model.Person;
 import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 
@@ -53,7 +54,7 @@ public class RepositoryConfig {
 		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(this.getDataSource());
 		sessionBuilder.addProperties(this.getHibernateProperties());
 		sessionBuilder.addPackage("com.tatharo.onelegacy.hibernate.domain.model").addAnnotatedClass(WoWCharacter.class)
-				.addAnnotatedClass(UserAccount.class).addAnnotatedClass(Person.class);
+				.addAnnotatedClass(UserAccount.class).addAnnotatedClass(Person.class).addAnnotatedClass(AccountTriggers.class);
 		return sessionBuilder.buildSessionFactory();
 	}
 
