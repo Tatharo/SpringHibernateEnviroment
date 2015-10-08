@@ -4,20 +4,22 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tatharo.onelegacy.hibernate.domain.model.UserAccount;
 
 @Repository
-public class UserAccountRepository extends GenericTypeRepository<UserAccount>{
+public class UserAccountRepository extends GenericTypeRepository<UserAccount> {
+	@Autowired
 	public UserAccountRepository(SessionFactory sf) {
 		super(sf);
 		this.sf = sf;
 	}
 
 	private final SessionFactory sf;
-	
+
 	@Transactional
 	public boolean isEmailAvailable(String email) {
 		String hql = "FROM UserAccount WHERE email=:email";

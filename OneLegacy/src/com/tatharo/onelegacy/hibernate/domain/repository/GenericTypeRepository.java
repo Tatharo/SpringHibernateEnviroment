@@ -13,7 +13,6 @@ public class GenericTypeRepository<T> {
 		sf.getCurrentSession().save(t);
 	}
 
-	
 	public void updateObject(T t) {
 		sf.getCurrentSession().update(t);
 	}
