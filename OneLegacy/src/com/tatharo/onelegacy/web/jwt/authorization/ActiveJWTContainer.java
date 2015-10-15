@@ -8,12 +8,26 @@ import org.springframework.stereotype.Component;
 
 import com.tatharo.onelegacy.spring.config.FixedVariables;
 
+/**
+ * 
+ * Session Container Class, contains data on all active Json Web Tokens
+ *
+ */
 @Component
 public final class ActiveJWTContainer {
 
-	private List<JWTSessionObject> JWTList = new ArrayList<JWTSessionObject>();
+	private final List<JWTSessionObject> JWTList = new ArrayList<JWTSessionObject>();
 
-	public long addJWTSessionObject(String userName) {
+	/**
+	 * Creates session object for server side session and creates a unique long
+	 * which acts as an ID. Returns long ID to be processed into a Json Web
+	 * Token for later authentication with the session container.
+	 * 
+	 * @param userName
+	 *            userName of the logged in account
+	 * @return long ID with unique key
+	 */
+	public synchronized long addJWTSessionObject(String userName) {
 		long currentTime = new Date().getTime();
 		long authKey = (long) (Math.random() * 1000000000);
 		this.removeOutdated(currentTime);
