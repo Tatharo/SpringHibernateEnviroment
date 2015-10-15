@@ -11,6 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 //TODO Triggers after account creation to be validated
+/**
+ * 
+ * Class dealing with general requirements and should trigger setting these missing requirements on login.
+ *
+ */
 @Entity
 public class AccountTriggers {
 	

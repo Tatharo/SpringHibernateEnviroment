@@ -5,7 +5,11 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+/**
+ * 
+ * Class dealing with applications on the site contains the basic info to create an UserAccount & WoWCharacter if accepted.
+ *
+ */
 public final class ApplicationData {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

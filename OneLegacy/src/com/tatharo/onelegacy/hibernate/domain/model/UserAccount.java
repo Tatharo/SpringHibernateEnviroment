@@ -11,7 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
+/**
+ * 
+ * Primary Entity containing all data for loging in and email for resetting passwords, has access to account triggers,linked WoWCharacters and Person details if this is made available.
+ *
+ */
 @Entity
 public final class UserAccount {
 	@Id
@@ -21,7 +25,6 @@ public final class UserAccount {
 
 	@Column(unique = true)
 	private String userName;
-	// TODO Password Encryption
 	private String password;
 	@Column(unique = true)
 	private String email;

@@ -6,7 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
+/**
+ * 
+ * In Game details of a Character
+ *
+ */
 
 @Entity
 public class WoWCharacter {

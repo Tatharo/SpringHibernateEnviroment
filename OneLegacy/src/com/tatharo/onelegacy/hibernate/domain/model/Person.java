@@ -9,7 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-
+/**
+ * 
+ * Class containing some basic personal info which is linked to a UserAccount, this data will remain optional.
+ *
+ */
 @Entity
 public class Person{
 	@Id
