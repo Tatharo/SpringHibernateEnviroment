@@ -1,7 +1,7 @@
 package com.tatharo.onelegacy.spring.config;
 /**
  * 
- * Class Containing fixed variables to prevent typos nad making it easier to adjust certain variables, some of these variables might be transfered to a .properties file in final application.
+ * Class Containing fixed variables to prevent typos and making it easier to adjust certain variables, some of these variables might be transfered to a .properties file in final application.
  *
  */
 public final class FixedVariables {
