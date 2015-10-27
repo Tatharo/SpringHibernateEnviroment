@@ -7,6 +7,16 @@ body {
 	height: 100%;
 }
 
+#banner {
+	position: relative;
+	display: block;
+	float: left;
+	background: #000;
+
+	height: 250px;
+	width: 100%;
+}
+
 #container {
 	position: relative;
 	display: block;
@@ -18,7 +28,7 @@ body {
 	padding: 0;
 	margin: 0;
 	border: none;
-	background: #000000;
+	background: #222;
 	color: #ffffff;
 }
 
@@ -63,8 +73,89 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-	cursor:not-allowed;
-	background:#0cf321;
-	font-weight:bold;
-	font-style:italic;
+	cursor: not-allowed;
+	background: #0cf321;
+	font-weight: bold;
+	font-style: italic;
+}
+
+#login {
+	position: relative;
+	display: block;
+	float: left;
+	width: auto;
+	min-width: 65%;
+	height: auto;
+	min-height: 150px;
+	padding: 0;
+	margin: 0;
+	border: none;
+	background: #666;
+	color: #ffffff;
+}
+
+#login form {
+	margin: 0;
+	padding: 0;
+	float: left;
+	display: block;
+	position: relative;
+	width: 290px;
+	height: 100%;
+	border: 5px solid #00ff00;
+	color: #ccff00;
+}
+
+#login form input {
+	margin: 0px;
+	margin-right: 5px;
+	margin-top: 1px;
+	padding: 0px;
+	float: right;
+	border: 1px solid #000;
+}
+
+#rightmenubar {
+	position: relative;
+	display: block;
+	float: right;
+	margin: 0;
+	padding: 0;
+	background: #aaa;
+	width: 20%;
+	height: 600px;
+}
+
+#rightmenubar ul {
+	color: aaa;
+	height:100%;
+}
+
+#applications {
+	position: relative;
+	display: block;
+	float: left;
+	height:300px;
+	width:15%;
+	background:#444;
+}
+
+#trials{
+
+	position:relative;
+	display: block;
+	float: left;
+	height:300px;
+	width:15%;
+	background:#888;
+}
+
+#applicationform{
+
+	position:relative;
+	display: block;
+	float: right;
+	height:450px;
+	width:65%;
+	background:#ccc;
 }
