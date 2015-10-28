@@ -1,6 +1,7 @@
 package com.tatharo.onelegacy.hibernate.domain.repository;
 
 import org.hibernate.SessionFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -20,6 +21,7 @@ public class GenericTypeRepository<T> {
 	 * 
 	 * @param t
 	 */
+	@Transactional
 	public void saveObject(T t) {
 		sf.getCurrentSession().save(t);
 	}
@@ -29,6 +31,7 @@ public class GenericTypeRepository<T> {
 	 * 
 	 * @param t
 	 */
+	@Transactional
 	public void updateObject(T t) {
 		sf.getCurrentSession().update(t);
 	}

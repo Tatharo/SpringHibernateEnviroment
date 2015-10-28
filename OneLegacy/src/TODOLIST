@@ -3,8 +3,6 @@
 	- Send email with validation Code $Medium priority 
 	- Usage of Multithreading $Medium priority
 	- Set properties with .properties file $Low Priority
-	- Generic Repository? $Low Priority
-	- Fix Plain HTML mapping, Spring $Low Priority
 	- Set Guild Rank method $Low Priority
 	- SimpleCaptcha for front end??? $Low Priority
 	

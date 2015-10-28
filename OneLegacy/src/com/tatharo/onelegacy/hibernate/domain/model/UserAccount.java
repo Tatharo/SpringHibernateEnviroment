@@ -2,7 +2,6 @@ package com.tatharo.onelegacy.hibernate.domain.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,9 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 /**
  * 
- * Primary Entity containing all data for loging in and email for resetting passwords, has access to account triggers,linked WoWCharacters and Person details if this is made available.
+ * Primary Entity containing all data for logging in and email for resetting
+ * passwords, has access to account triggers,linked WoWCharacters and Person
+ * details if this is made available.
  *
  */
 @Entity
@@ -28,9 +30,9 @@ public final class UserAccount {
 	private String password;
 	@Column(unique = true)
 	private String email;
-	@OneToMany(targetEntity=WoWCharacter.class,mappedBy="userAccount",fetch = FetchType.EAGER)
+	@OneToMany(targetEntity = WoWCharacter.class, mappedBy = "userAccount", fetch = FetchType.EAGER)
 	private List<WoWCharacter> characters;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Person person;
 	@OneToOne
 	private AccountTriggers accountTriggers;
@@ -68,7 +70,6 @@ public final class UserAccount {
 		return email;
 	}
 
-
 	public List<WoWCharacter> getCharacters() {
 		return characters;
 	}
@@ -96,5 +97,5 @@ public final class UserAccount {
 	public void setAccountTriggers(AccountTriggers accountTriggers) {
 		this.accountTriggers = accountTriggers;
 	}
-	
+
 }
