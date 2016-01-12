@@ -1,7 +1,7 @@
 package com.tatharo.onelegacy.hibernate.domain.model;
 /**
  * 
- * In Game Rank
+ * In Game Guild Rank
  *
  */
 public enum GuildRank {

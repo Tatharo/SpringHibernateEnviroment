@@ -13,6 +13,16 @@ public final class AddressDto {
 	private final String street;
 	private final String streetNumber;
 	private final String zipCode;
+	/**
+	 * Data Transfer Object for creating a Address.class
+	 * 
+	 * @param country
+	 * @param province
+	 * @param city
+	 * @param street
+	 * @param streetNumber
+	 * @param zipCode
+	 */
 	@JsonCreator
 	public AddressDto(@JsonProperty("country")String country, @JsonProperty("province")String province, @JsonProperty("city")String city,
 			@JsonProperty("street")String street,@JsonProperty("streetNumber") String streetNumber,@JsonProperty("zipCode") String zipCode) {

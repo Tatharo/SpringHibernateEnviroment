@@ -42,6 +42,26 @@ public final class ApplicationFormDto {
 	private final int itemLevel;
 	private final String previousRaidingExperience;
 
+	/**
+	 * Data Transfer Object for a guild application, contains enough info to
+	 * create a UserAccount.class & WoWCharacter.class if the application is
+	 * accepted. Can contain more info for extra account details such as
+	 * address.class & Person.class
+	 * 
+	 * 
+	 * 
+	 * @param userName
+	 * @param email
+	 * @param passWord
+	 * @param characterName
+	 * @param characterClass
+	 * @param characterRace
+	 * @param characterMainSpecialization
+	 * @param characterOffSpecialization
+	 * @param characterLevel
+	 * @param itemLevel
+	 * @param previousRaidingExperience
+	 */
 	@JsonCreator
 	public ApplicationFormDto(@JsonProperty("userName") String userName, @JsonProperty("email") String email,
 			@JsonProperty("passWord") String passWord, @JsonProperty("characterName") String characterName,

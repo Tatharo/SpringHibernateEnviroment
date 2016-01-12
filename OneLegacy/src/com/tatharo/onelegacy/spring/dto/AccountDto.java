@@ -17,8 +17,16 @@ public final class AccountDto {
 	@Size(min = 8, max = 20)
 	private final String passWord;
 
+	/**
+	 * Data Transfer Object for creating a UserAccount.class
+	 * 
+	 * @param email
+	 * @param userName
+	 * @param passWord
+	 */
 	@JsonCreator
-	public AccountDto(@JsonProperty("email") String email, @JsonProperty("userName") String userName,@JsonProperty("passWord") String passWord) {
+	public AccountDto(@JsonProperty("email") String email, @JsonProperty("userName") String userName,
+			@JsonProperty("passWord") String passWord) {
 
 		this.email = email;
 		this.userName = userName;

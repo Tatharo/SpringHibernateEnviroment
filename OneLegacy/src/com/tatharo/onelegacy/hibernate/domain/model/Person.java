@@ -9,17 +9,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
 /**
  * 
- * Class containing some basic personal info which is linked to a UserAccount, this data will remain optional.
+ * Class containing some basic personal info which is linked to a UserAccount,
+ * this data will remain optional.
  *
  */
 @Entity
-public class Person{
+public class Person {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID",unique = true)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "ID", unique = true)
 	private long id;
 	private String firstName;
 	private String middleName;
@@ -28,57 +30,71 @@ public class Person{
 	private Date dateOfBirth;
 	@OneToOne
 	private UserAccount userAccount;
-	
+
 	public Person() {
 	}
-	public Person(String firstName, String middleName, String lastName,UserAccount userAccount, Date dateOfBirth, String gender) {
+
+	public Person(String firstName, String middleName, String lastName, UserAccount userAccount, Date dateOfBirth,
+			String gender) {
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
 		this.gender = gender;
 		this.dateOfBirth = dateOfBirth;
 		this.userAccount = userAccount;
-		
-		
+
 	}
+
 	public UserAccount getUserAccount() {
 		return userAccount;
 	}
+
 	public void setUserAccount(UserAccount userAccount) {
 		this.userAccount = userAccount;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	public String getMiddleName() {
 		return middleName;
 	}
+
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
 	}
+
 	public String getLastName() {
 		return lastName;
 	}
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
 	public long getId() {
 		return id;
 	}
+
 	public String getGender() {
 		return gender;
 	}
+
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
+
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
+
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	
+
 }
