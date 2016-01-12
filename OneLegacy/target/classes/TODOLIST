@@ -1,0 +1,8 @@
+#TODOLIST - 19-20 September
+	- Increase Abstraction level for REST services such as Token validation $High priority
+	- Send email with validation Code $Medium priority 
+	- Usage of Multithreading $Medium priority
+	- Set properties with .properties file $Low Priority
+	- Set Guild Rank method $Low Priority
+	- SimpleCaptcha for front end??? $Low Priority
+	
