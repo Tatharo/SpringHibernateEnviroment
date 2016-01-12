@@ -4,3 +4,11 @@ RemoteSystemsTempFiles/
 .recommenders/
 OneLegacy/.settings/
 GameRecruitmentBackEnd/.settings/org.eclipse.jdt.ui.prefs
+OneLegacy/.project
+OneLegacy/.gitignore
+OneLegacyFrontEnd/.gitignore
+OneLegacyFrontEnd/.project
+GuildRecruitmentBackEnd/.project
+GuildRecruitmentFrontEnd/.project
+GuildRecruitmentBackEnd/.gitignore
+GuildRecruitmentFrontEnd/.gitignore
